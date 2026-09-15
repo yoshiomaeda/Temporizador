@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Temporizador</title>
+
+<style>
+:root {
+    --primary-color: #2c3e50;
+    --accent-color: #4CAF50;
+    --warning-color: #ff9800;
+    --danger-color: #f44336;
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #dddddd;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    -webkit-text-size-adjust: 100%;
+}
+
+.container {
+    background-color: var(--card-bg);
+    max-width: 650px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+h2 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.config-group {
+    margin: 12px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+label { font-size: 14px; }
+
+select, input[type="number"], input[type="text"] {
+    padding: 10px 12px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    outline: none;
+    max-width: 100%;
+}
+
+input[type="text"]#nomeTemporizador {
+    width: 100%;
+    max-width: 320px;
+}
+
+#tempo {
+    font-size: 56px;
+    font-weight: bold;
+    font-family: monospace;
+    margin: 15px 0 10px 0;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+}
+
+#decorrido {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+    min-height: 18px;
+}
+
+#barra {
+    max-width: 100%;
+    width: 100%;
+    height: 24px;
+    border-radius: 12px;
+    margin: 10px auto;
+    background-color: #e0e0e0;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+#progresso {
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease, background-color 0.5s ease;
+}
+
+#percentual {
+    margin-top: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #666;
+}
+
+.controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #007bff;
+    color: white;
+    flex: 1 1 auto;
+    min-width: 90px;
+    touch-action: manipulation;
+}
+
+button:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+button#btnPausar { background-color: #ffc107; color: #000; }
+button#btnParar { background-color: #6c757d; }
+button#btnReiniciar { background-color: #dc3545; }
+
+#previsao {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+    min-height: 24px;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 25px 0 15px 0;
+}
+
+.historico-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.historico-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 18px;
+}
+
+.btn-limpar {
+    padding: 8px 12px;
+    font-size: 13px;
+    background-color: #6c757d;
+    flex: 0 0 auto;
+    min-width: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 8px 6px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    word-break: break-word;
+}
+
+th {
+    background-color: #f1f3f5;
+    color: var(--primary-color);
+}
+
+tbody tr:nth-child(even) { background-color: #f9f9f9; }
+
+.custom-time-box {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+@media (max-width: 420px) {
+    .container { padding: 15px; }
+    #tempo { font-size: 44px; }
+    button { font-size: 15px; padding: 11px 14px; }
+    th, td { padding: 6px 4px; font-size: 13px; }
+    select, input { font-size: 15px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Temporizador</h2>
+
+    <div class="config-group">
+        <label for="nomeTemporizador"><strong>Nome:</strong></label>
+        <input type="text" id="nomeTemporizador" placeholder="Ex: Estudo, Pausa..." onchange="salvarNome()">
+    </div>
+
+    <div class="config-group">
+        <label for="duracao"><strong>Duração:</strong></label>
+        <select id="duracao" onchange="selecionarDuracao()">
+            <option value="15" selected>15 minutos</option>
+            <option value="12">12 minutos</option>
+            <option value="9">9 minutos</option>
+            <option value="6">6 minutos</option>
+            <option value="3">3 minutos</option>
+            <option value="30">30 minutos</option>
+            <option value="45">45 minutos</option>
+            <option value="60">60 minutos</option>
+            <option value="custom">Personalizado</option>
+        </select>
+
+        <div id="boxCustom" class="custom-time-box" style="display: none;">
+            <input type="number" id="customMinutos" min="1" max="300" value="10" onchange="atualizarCustom()"> min
+        </div>
+    </div>
+
+    <div id="tempo" aria-live="polite">00:00</div>
+    <div id="decorrido"></div>
+
+    <div id="barra">
+        <div id="progresso"></div>
+    </div>
+
+    <div id="percentual">100.0%</div>
+
+    <div class="controls">
+        <button id="btnIniciar" onclick="iniciar()">Iniciar</button>
+        <button id="btnPausar" onclick="pausar()" disabled>Pausar</button>
+        <button id="btnParar" onclick="parar()" disabled>Parar</button>
+        <button id="btnReiniciar" onclick="reiniciar()">Reiniciar</button>
+    </div>
+
+    <div id="previsao"></div>
+
+    <hr>
+
+    <div class="historico-header">
+        <h3>Histórico</h3>
+        <button class="btn-limpar" onclick="limparHistorico()">Limpar</button>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Início</th>
+            <th>Término</th>
+            <th>Duração</th>
+        </tr>
+        </thead>
+        <tbody id="historico"></tbody>
+    </table>
+</div>
+
+<script>
+let DURACAO_TOTAL = 15 * 60; // segundos
+let segundos = DURACAO_TOTAL;
+let timer = null;
+
+let horarioInicio = null;      // Date do início original
+let horarioFimReal = null;     // timestamp ms previsto para o fim
+let instantePausa = null;      // timestamp ms da última pausa
+let pausado = false;
+
+let intervaloPisca = null;
+let audioCtx = null;
+let ultimoTextoTempo = "";
+
+/* -------------------- Persistência -------------------- */
+function salvarNome() {
+    const nome = document.getElementById("nomeTemporizador").value;
+    localStorage.setItem("duracao_nome", nome);
+}
+
+/* -------------------- Configuração de duração -------------------- */
+function selecionarDuracao() {
+    if (timer !== null) return;
+
+    const select = document.getElementById("duracao");
+    const boxCustom = document.getElementById("boxCustom");
+
+    let minutos;
+
+    if (select.value === "custom") {
+        boxCustom.style.display = "inline-flex";
+        minutos = clamp(parseInt(document.getElementById("customMinutos").value) || 1, 1, 300);
+        document.getElementById("customMinutos").value = minutos;
+    } else {
+        boxCustom.style.display = "none";
+        minutos = parseInt(select.value);
+    }
+
+    DURACAO_TOTAL = minutos * 60;
+    localStorage.setItem("duracao_tipo", select.value);
+    localStorage.setItem("duracao_custom", document.getElementById("customMinutos").value);
+
+    segundos = DURACAO_TOTAL;
+
+    // Limpa estado de pausa ao trocar duração
+    pausado = false;
+    instantePausa = null;
+    horarioFimReal = null;
+
+    document.getElementById("previsao").innerHTML = "";
+    document.getElementById("decorrido").innerHTML = "";
+    atualizarTela();
+}
+
+function atualizarCustom() {
+    if (document.getElementById("duracao").value === "custom") {
+        selecionarDuracao();
+    }
+}
+
+function clamp(v, min, max) {
+    return Math.min(Math.max(v, min), max);
+}
+
+/* -------------------- Render -------------------- */
+function atualizarTela() {
+    const minutos = Math.floor(segundos / 60);
+    const restoSegundos = segundos % 60;
+
+    const textoTempo =
+        String(minutos).padStart(2, '0') + ':' +
+        String(restoSegundos).padStart(2, '0');
+
+    document.getElementById("tempo").innerText = textoTempo;
+
+    const percentual = DURACAO_TOTAL > 0 ? (segundos / DURACAO_TOTAL) * 100 : 0;
+    const progressoEl = document.getElementById("progresso");
+
+    progressoEl.style.width = percentual + "%";
+    document.getElementById("percentual").innerText = percentual.toFixed(1) + "%";
+
+    if (percentual <= 10) {
+        progressoEl.style.backgroundColor = "var(--danger-color)";
+    } else if (percentual <= 30) {
+        progressoEl.style.backgroundColor = "var(--warning-color)";
+    } else {
+        progressoEl.style.backgroundColor = "var(--accent-color)";
+    }
+
+    // Tempo decorrido
+    const decorrido = DURACAO_TOTAL - segundos;
+    const dMin = Math.floor(decorrido / 60);
+    const dSeg = decorrido % 60;
+    document.getElementById("decorrido").innerText =
+        `Decorrido: ${String(dMin).padStart(2,'0')}:${String(dSeg).padStart(2,'0')}`;
+
+    // Só atualiza título quando o texto mudar
+    if (textoTempo !== ultimoTextoTempo) {
+        ultimoTextoTempo = textoTempo;
+        atualizarTitulo(textoTempo);
+    }
+}
+
+function atualizarTitulo(textoTempo) {
+    const minText = Math.ceil(DURACAO_TOTAL / 60);
+    const nomeTemp = document.getElementById("nomeTemporizador").value.trim();
+    const sufixoNome = nomeTemp ? ` - ${nomeTemp}` : '';
+
+    if (segundos > 300) {
+        document.title = `✓ ${textoTempo} (${minText}m)${sufixoNome}`;
+    } else if (segundos > 60) {
+        document.title = `⚠ ${textoTempo} (${minText}m)${sufixoNome}`;
+    } else {
+        document.title = `✖ ${textoTempo} (${minText}m)${sufixoNome}`;
+    }
+}
+
+function atualizarBotoes(rodando) {
+    const pausadoAgora = rodando === false && pausado === true;
+
+    document.getElementById("btnIniciar").disabled = rodando;
+    document.getElementById("btnPausar").disabled = !rodando;
+    document.getElementById("btnParar").disabled = !rodando && !pausadoAgora;
+    document.getElementById("duracao").disabled = rodando;
+    document.getElementById("customMinutos").disabled = rodando;
+    document.getElementById("nomeTemporizador").disabled = rodando;
+}
+
+/* -------------------- Áudio -------------------- */
+function tocarAlarme() {
+    let repeticoes = 0;
+
+    if (!audioCtx) {
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            return;
+        }
+    } else if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+    }
+
+    const intervalo = setInterval(() => {
+        if (!audioCtx) { clearInterval(intervalo); return; }
+
+        try {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.frequency.value = 1800;
+            gain.gain.value = 0.3;
+            osc.start();
+            setTimeout(() => {
+                try { osc.stop(); osc.disconnect(); gain.disconnect(); } catch(e){}
+            }, 300);
+        } catch (e) {}
+
+        repeticoes++;
+        if (repeticoes >= 10) clearInterval(intervalo);
+    }, 1000);
+}
+
+/* -------------------- Notificação -------------------- */
+function solicitarEEnviarNotificacao() {
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "granted") {
+        enviarNotificacao();
+    } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+            if (permission === "granted") enviarNotificacao();
+        });
+    }
+}
+
+function enviarNotificacao() {
+    const minutos = Math.ceil(DURACAO_TOTAL / 60);
+    const nome = document.getElementById("nomeTemporizador").value.trim() || "Temporizador";
+    try {
+        new Notification(`${nome} Finalizado!`, {
+            body: `O tempo de ${minutos} minuto(s) foi concluído.`,
+            requireInteraction: true
+        });
+    } catch (e) {}
+}
+
+/* -------------------- Piscar título -------------------- */
+function piscarTitulo() {
+    if (intervaloPisca !== null) return;
+
+    let estado = false;
+    const nomeTemp = document.getElementById("nomeTemporizador").value.trim();
+    const rotulo = nomeTemp ? nomeTemp.toUpperCase() : "TEMPO";
+
+    intervaloPisca = setInterval(() => {
+        document.title = estado ? `<<< ${rotulo} >>>` : ">>> ESGOTADO <<<";
+        estado = !estado;
+    }, 1000);
+}
+
+function pararPiscarTitulo(restaurar = true) {
+    if (intervaloPisca !== null) {
+        clearInterval(intervaloPisca);
+        intervaloPisca = null;
+    }
+    if (restaurar) {
+        document.title = "Temporizador";
+    }
+}
+
+/* -------------------- Previsão -------------------- */
+function atualizarPrevisaoUI() {
+    if (!horarioFimReal) {
+        document.getElementById("previsao").innerHTML = "";
+        return;
+    }
+    const fimTexto = new Date(horarioFimReal).toLocaleTimeString('pt-BR', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    const pausadoTexto = pausado ? " <b>(Pausado)</b>" : "";
+    document.getElementById("previsao").innerHTML =
+        `Término previsto às <b>${fimTexto}</b>${pausadoTexto}`;
+}
+
+/* -------------------- Controle principal -------------------- */
+function iniciar() {
+    if (timer !== null) return;
+
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission().catch(() => {});
+    }
+
+    pararPiscarTitulo(false);
+
+    const agora = Date.now();
+
+    if (!pausado) {
+        // Início novo
+        horarioInicio = new Date();
+        horarioFimReal = agora + DURACAO_TOTAL * 1000;
+        // Se estiver retomando de pausa, foi tratado abaixo
+    } else {
+        // Retomada: soma o tempo que ficou em pausa
+        if (instantePausa) {
+            const tempoQueFicouPausado = agora - instantePausa;
+            horarioFimReal += tempoQueFicouPausado;
+            instantePausa = null;
+        }
+        pausado = false;
+    }
+
+    atualizarPrevisaoUI();
+    atualizarBotoes(true);
+
+    timer = setInterval(() => {
+        segundos = Math.max(0, Math.ceil((horarioFimReal - Date.now()) / 1000));
+        atualizarTela();
+
+        if (segundos <= 0) {
+            clearInterval(timer);
+            timer = null;
+            segundos = 0;
+
+            atualizarBotoes(false);
+            document.getElementById("btnParar").disabled = true;
+            registrarHistorico();
+            tocarAlarme();
+            solicitarEEnviarNotificacao();
+            piscarTitulo();
+        }
+    }, 250);
+}
+
+function pausar() {
+    if (timer === null) return;
+
+    clearInterval(timer);
+    timer = null;
+    pausado = true;
+    instantePausa = Date.now();
+
+    atualizarBotoes(false);
+    document.getElementById("btnIniciar").disabled = false;
+    document.getElementById("btnParar").disabled = false;
+    atualizarPrevisaoUI();
+}
+
+function parar() {
+    // Encerra sem registrar histórico
+    pararPiscarTitulo();
+    if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+    }
+    pausado = false;
+    instantePausa = null;
+    horarioFimReal = null;
+    horarioInicio = null;
+
+    DURACAO_TOTAL = ObterDuracaoAtualSegundos();
+    segundos = DURACAO_TOTAL;
+
+    document.getElementById("previsao").innerHTML = "";
+    atualizarBotoes(false);
+    atualizarTela();
+}
+
+function reiniciar() {
+    pararPiscarTitulo();
+    if (timer !== null) {
+        clearInterval(timer);
+        timer = null;
+    }
+
+    pausado = false;
+    instantePausa = null;
+    horarioFimReal = null;
+    horarioInicio = null;
+
+    DURACAO_TOTAL = ObterDuracaoAtualSegundos();
+    segundos = DURACAO_TOTAL;
+
+    document.getElementById("previsao").innerHTML = "";
+    atualizarBotoes(false);
+    atualizarTela();
+}
+
+function ObterDuracaoAtualSegundos() {
+    const select = document.getElementById("duracao");
+    if (select.value === "custom") {
+        const v = clamp(parseInt(document.getElementById("customMinutos").value) || 1, 1, 300);
+        return v * 60;
+    }
+    return parseInt(select.value) * 60;
+}
+
+/* -------------------- Histórico -------------------- */
+function registrarHistorico() {
+    if (!horarioInicio) return;
+
+    const inicioTexto = horarioInicio.toLocaleTimeString('pt-BR', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+
+    const fimTexto = new Date(horarioFimReal).toLocaleTimeString('pt-BR', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+
+    const minutos = Math.ceil(DURACAO_TOTAL / 60);
+    const nome = document.getElementById("nomeTemporizador").value.trim() || "-";
+
+    const novoItem = {
+        nome: nome,
+        inicio: inicioTexto,
+        fim: fimTexto,
+        duracao: `${minutos} min`
+    };
+
+    let historicoData = JSON.parse(localStorage.getItem("historico_temporizador") || "[]");
+    historicoData.unshift(novoItem);
+    localStorage.setItem("historico_temporizador", JSON.stringify(historicoData));
+
+    renderizarHistorico();
+}
+
+function renderizarHistorico() {
+    const tbody = document.getElementById("historico");
+    tbody.innerHTML = "";
+
+    let historicoData;
+    try {
+        historicoData = JSON.parse(localStorage.getItem("historico_temporizador") || "[]");
+    } catch (e) {
+        historicoData = [];
+    }
+
+    historicoData.forEach(item => {
+        const linha = document.createElement("tr");
+
+        const tdNome = document.createElement("td");
+        const strong = document.createElement("strong");
+        strong.textContent = item.nome || "-";
+        tdNome.appendChild(strong);
+
+        const tdInicio = document.createElement("td");
+        tdInicio.textContent = item.inicio || "-";
+
+        const tdFim = document.createElement("td");
+        tdFim.textContent = item.fim || "-";
+
+        const tdDur = document.createElement("td");
+        tdDur.textContent = item.duracao || "-";
+
+        linha.appendChild(tdNome);
+        linha.appendChild(tdInicio);
+        linha.appendChild(tdFim);
+        linha.appendChild(tdDur);
+
+        tbody.appendChild(linha);
+    });
+}
+
+function limparHistorico() {
+    if (!confirm("Deseja realmente limpar todo o histórico?")) return;
+    localStorage.removeItem("historico_temporizador");
+    renderizarHistorico();
+}
+
+/* -------------------- Eventos globais -------------------- */
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        pararPiscarTitulo();
+    }
+});
+
+// Retoma AudioContext no primeiro toque (iOS/Safari)
+document.addEventListener("touchstart", function resumeAudio() {
+    if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+    }
+    document.removeEventListener("touchstart", resumeAudio);
+}, { passive: true });
+
+window.onload = function () {
+    const duracaoTipoSalva = localStorage.getItem("duracao_tipo");
+    const duracaoCustomSalva = localStorage.getItem("duracao_custom");
+    const duracaoNomeSalvo = localStorage.getItem("duracao_nome");
+
+    if (duracaoNomeSalvo) {
+        document.getElementById("nomeTemporizador").value = duracaoNomeSalvo;
+    }
+    if (duracaoCustomSalva) {
+        document.getElementById("customMinutos").value = duracaoCustomSalva;
+    }
+    if (duracaoTipoSalva) {
+        document.getElementById("duracao").value = duracaoTipoSalva;
+    }
+
+    selecionarDuracao();
+    renderizarHistorico();
+};
+</script>
+
+</body>
+</html>
