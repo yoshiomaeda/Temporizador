@@ -1,78 +1,80 @@
-# ⏱️ Temporizador HTML
 
 
-Temporizador desenvolvido em HTML, CSS e JavaScript puro, focado em produtividade, gestão de tempo e uso rápido tanto em desktop quanto em dispositivos móveis. Destinado a quem fica/trabalha com o navegador aberto permanentemente.
+# Temporizador HTML
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColorCSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=oColor=white
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColornsive](https://img.shields.io/badge/Responsive-Mobile%20Friendly-success-badge
+![Offline](https://img.shields.io/badge/Offline-Ready-bluethe-badge
+![LocalStorage](https://img.shields.io/badge/Storage-LocalStorager-the-badge
+
+Temporizador desenvolvido em HTML, CSS e JavaScript puro, focado em produtividade, gestão de tempo e uso rápido tanto em desktop quanto em dispositivos móveis. Próprio para quem fica/trabalha com o navegador aberto permanentemente.
 
 ![Temporizador](https://github.com/yoshiomaeda/Temporizador/blob/main/temporizadorV09.png)
 
-## ✨ Funcionalidades
+---
 
-### 🎯 Controle de tempo
+## Recursos
+
+### Controle de Tempo
 
 - Contagem regressiva em tempo real.
-- Botões de duração pré-definida configuráveis.
-- Início automático ao selecionar uma duração.
-- Suporte a duração personalizada.
-- Pausa, retomada, parada e reinicialização.
+- Botões de duração pré-definida.
+- Duração personalizada.
+- Início automático ao selecionar um tempo.
+- Pausa e retomada.
+- Parada e reinicialização.
 
-### ⚡ Ajustes rápidos durante a execução
+### Ajuste Dinâmico
 
-Permite alterar o tempo restante sem interromper o temporizador:
+Durante a execução é possível ajustar o tempo sem interromper a contagem:
 
 - `-5m`
 - `-1m`
 - `+1m`
 - `+5m`
 
-### 📊 Indicadores visuais
+### Indicadores Visuais
 
-- Exibição do tempo restante.
-- Exibição do tempo decorrido.
-- Barra de progresso dinâmica.
+- Tempo restante.
+- Tempo decorrido.
+- Barra de progresso.
 - Percentual restante.
-- Alteração automática de cores conforme o tempo diminui:
-  - 🟢 Verde
-  - 🟠 Laranja
-  - 🔴 Vermelho
+- Mudança automática de cores conforme o tempo se aproxima do fim.
 
-### 🕒 Previsão de término
+### Previsão de Término
 
 Exibe automaticamente o horário previsto para conclusão da atividade.
 
-### 🔔 Alertas
+### Alertas
 
-- Alarme sonoro ao término.
+- Alarme sonoro.
 - Notificação do navegador.
-- Destaque visual da aba quando o tempo se esgota.
+- Destaque visual na aba ao término da contagem.
 
-### 🏷️ Identificação da atividade
+### Nome da Atividade
 
-Permite definir um nome para o temporizador.
+Permite identificar cada temporizador com um nome personalizado.
 
 Exemplos:
 
 - Estudo
 - Reunião
-- Pausa
 - Atendimento
 - Treinamento
+- Pausa
 
-O nome também é exibido nas notificações e no histórico.
+### Histórico
 
-### 📑 Histórico
+O sistema registra automaticamente:
 
-Cada execução concluída registra:
+- Nome da atividade
+- Horário de início
+- Horário de término
+- Duração utilizada
 
-| Campo | Descrição |
-|---------|---------|
-| Nome | Nome da atividade |
-| Início | Horário de início |
-| Término | Horário de término |
-| Duração | Tempo utilizado |
+### Tempos Recentes
 
-### 🕘 Tempos recentes
-
-Os últimos tempos utilizados são disponibilizados automaticamente em botões de acesso rápido.
+Os últimos tempos utilizados aparecem automaticamente como atalhos.
 
 Exemplo:
 
@@ -80,31 +82,33 @@ Exemplo:
 15 min | 3 min | 30 min | 1 min
 ```
 
-Ao clicar em um dos botões:
+Ao clicar em um deles:
 
-- A duração é selecionada automaticamente.
+- A duração é selecionada.
 - A contagem é iniciada imediatamente.
 
-### 💾 Persistência local
+### Persistência Local
 
-As informações são armazenadas no navegador utilizando **Local Storage**:
+As configurações são armazenadas no navegador:
 
-- Nome da atividade.
-- Última duração selecionada.
-- Configuração personalizada.
-- Histórico de execuções.
+- Nome da atividade
+- Última duração utilizada
+- Valor personalizado
+- Histórico de execuções
 
-### 📱 Interface responsiva
+### Interface Responsiva
 
 Compatível com:
 
 - Desktop
-- Tablets
-- Smartphones
+- Tablet
+- Smartphone
 
-## ⚙️ Personalização
+---
 
-Os tempos padrão podem ser alterados facilmente editando o array:
+## Personalização
+
+Os tempos exibidos nos botões podem ser alterados facilmente:
 
 ```javascript
 const OPCOES_TEMPO_MINUTOS = [3, 6, 9, 12, 15, 30, 45, 60];
@@ -113,27 +117,47 @@ const OPCOES_TEMPO_MINUTOS = [3, 6, 9, 12, 15, 30, 45, 60];
 Exemplo:
 
 ```javascript
-const OPCOES_TEMPO_MINUTOS = [1, 5, 10, 15, 20, 25, 30, 60];
+const OPCOES_TEMPO_MINUTOS = [1, 5, 10, 20, 25, 45, 60, 90];
 ```
 
-## 🛠 Tecnologias utilizadas
+---
+
+## Tecnologias Utilizadas
 
 - HTML5
 - CSS3
-- JavaScript (Vanilla JS)
+- JavaScript Vanilla
 - Web Audio API
 - Web Notifications API
 - Local Storage
 
-## 🚀 Como utilizar
+---
 
-1. Abra o arquivo `Temporizador.html` no navegador.
+## Como Utilizar
+
+```text
+1. Abra o arquivo HTML no navegador.
 2. Informe um nome para a atividade (opcional).
-3. Selecione uma duração.
-4. O temporizador iniciará automaticamente.
-5. Ajuste o tempo quando necessário.
-6. Receba alerta sonoro e notificação ao término.
+3. Clique em uma duração.
+4. O temporizador inicia automaticamente.
+5. Ajuste o tempo se necessário.
+6. Aguarde o alerta ao final da contagem.
+```
 
-## 📄 Licença
+---
 
-Este projeto pode ser utilizado, modificado e distribuído livremente conforme a licença adotada pelo repositório.
+## Diferenciais
+
+- Arquivo único HTML.
+- Sem dependências externas.
+- Funciona offline.
+- Histórico automático.
+- Tempos recentes inteligentes.
+- Compatível com dispositivos móveis.
+- Fácil de personalizar.
+
+---
+
+## Licença
+
+Sinta-se à vontade para utilizar, adaptar e evoluir o projeto.
