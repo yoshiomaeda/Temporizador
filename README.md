@@ -1,17 +1,10 @@
 # Temporizador HTML
-2
- 
-3
+
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logote
-4
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=forge&logo=css3&logoColor=white
-5
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=oColor=black
-6
 ![Responsive](https://img.shields.io/badge/Responsive-Mobile%20Friendly-success?style=for-the-b](https://img.shields.io/badge/Offline?style=for-the-badge
-7
 ![LocalStorage](https://img.shields.io/badge/Storage-LocalStorage-orange?dge
-8
 Temporizador desenvolvido em HTML, CSS e JavaScript puro, focado em produtividade, gestão de tempo e uso rápido tanto em desktop quanto em dispositivos móveis. Próprio para quem fica/trabalha com o navegador aberto permanentemente.
 
 ![Temporizador](https://github.com/yoshiomaeda/Temporizador/blob/main/temporizadorV09.png)
